@@ -15,8 +15,18 @@ MongoClient.connect(url, function (err, db){
                 if (err) throw err;
                 res.send(salles);
 			})
-		})
-	})
+		});
+
+	});
+	db.collection('Contacts', function(err, collection){
+        app.put('/localpitsymf/orga/newsalle/testreqid/:id', function(req, res){
+            collection.updateOne({"_id": new mongodb.ObjectID(req.params.id)}, { $set: {nom: "nouveau james"} }, function (err, contact){
+                if (err) throw err;
+                res.send(contact);
+            })
+        });
+    });
 });
+
 
 var server = app.listen(8080);
