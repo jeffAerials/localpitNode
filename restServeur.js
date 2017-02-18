@@ -1,7 +1,12 @@
 var express = require('express');
 var mongodb = require('mongodb');
+var bodyParser = require("body-parser");
+var cors = require('cors');
 
 var app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 var MongoClient = mongodb.MongoClient;
 
 var url = 'mongodb://localhost:27017/lopitadminprep';
@@ -19,12 +24,20 @@ MongoClient.connect(url, function (err, db){
 
 	});
 	db.collection('Contacts', function(err, collection){
-        app.put('/localpitsymf/orga/newsalle/testreqid/:id', function(req, res){
+        app.options('/localpitsymf/orga/newsalle/ajoutsalle/:id', cors());
+        app.put('/localpitsymf/orga/newsalle/ajoutsalle/:id',  cors(), function(req, res){
             var updateDoc = req.body;
-            collection.updateOne({"_id": new mongodb.ObjectID(req.params.id)}, { $set: {salles: {nom: "Jeff", prenom: "Jean2"} } }, function (err, contact){
+            console.log(updateDoc);
+            collection.updateOne({"_id": new mongodb.ObjectID(req.params.id)}, { $push: { salles: {nom: "Jeff7", prenom: "Jean3"} } }, function (err, contact){
                 if (err) throw err;
-                console.log(updateDoc);
+
                 res.send(contact);
+            })
+        });
+        app.get('/localpitsymf/orga/newsalle/sallesinscrite/:id', function(req, res){
+            collection.find({"_id": new mongodb.ObjectID(req.params.id)}).toArray(function(err, sallesins){
+                if (err) throw err;
+                res.send(sallesins);
             })
         });
     });
