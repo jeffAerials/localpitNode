@@ -25,10 +25,16 @@ MongoClient.connect(url, function (err, db){
 
 	db.collection ('SearchSalles', function(err, collection){
 
+        collection.createIndex(
+            { nom : "text" }, function(err, result) {
+
+            });
+
 		app.get('/localpitsymf/orga/newsalle/searchsalles', cors(corsOptionsDelegate), function(req, res){
-			collection.find().toArray(function(err, salles){
+            var searchDoc = req.query;
+			collection.find({$text: {"$search" : searchDoc.nom.toString() }}).toArray(function(err, salle){
                 if (err) throw err;
-                res.send(salles);
+                res.send(salle);
 			})
 		});
 
