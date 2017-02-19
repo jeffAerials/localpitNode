@@ -12,10 +12,20 @@ var MongoClient = mongodb.MongoClient;
 var url = 'mongodb://localhost:27017/lopitadminprep';
 MongoClient.connect(url, function (err, db){
 	if (err) throw err;
+    var whitelist = ['http://localhost:8080', 'http://localpit.net:8080', 'http://localhost', 'http://localpit.net'];
+    var corsOptionsDelegate = function (req, callback) {
+        var corsOptions;
+        if (whitelist.indexOf(req.header('Origin')) !== -1) {
+            corsOptions = { origin: true }; // reflect (enable) the requested origin in the CORS response
+        }else{
+            corsOptions = { origin: false }; // disable CORS for this request
+        }
+        callback(null, corsOptions); // callback expects two parameters: error and options
+    };
 
 	db.collection ('SearchSalles', function(err, collection){
 
-		app.get('/localpitsymf/orga/newsalle/searchsalles', function(req, res){
+		app.get('/localpitsymf/orga/newsalle/searchsalles', cors(corsOptionsDelegate), function(req, res){
 			collection.find().toArray(function(err, salles){
                 if (err) throw err;
                 res.send(salles);
@@ -24,8 +34,8 @@ MongoClient.connect(url, function (err, db){
 
 	});
 	db.collection('Contacts', function(err, collection){
-        app.options('/localpitsymf/orga/newsalle/ajoutsalle/:id', cors());
-        app.put('/localpitsymf/orga/newsalle/ajoutsalle/:id',  cors(), function(req, res){
+        app.options('/localpitsymf/orga/newsalle/ajoutsalle/:id', cors(corsOptionsDelegate));
+        app.put('/localpitsymf/orga/newsalle/ajoutsalle/:id',  cors(corsOptionsDelegate), function(req, res){
             var updateDoc = req.body;
             collection.updateOne({"_id": new mongodb.ObjectID(req.params.id)}, { $push: { salles: updateDoc } }, function (err, contact){
                 if (err) throw err;
