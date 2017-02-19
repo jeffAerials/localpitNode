@@ -27,8 +27,7 @@ MongoClient.connect(url, function (err, db){
         app.options('/localpitsymf/orga/newsalle/ajoutsalle/:id', cors());
         app.put('/localpitsymf/orga/newsalle/ajoutsalle/:id',  cors(), function(req, res){
             var updateDoc = req.body;
-            console.log(updateDoc);
-            collection.updateOne({"_id": new mongodb.ObjectID(req.params.id)}, { $push: { salles: {nom: "Jeff7", prenom: "Jean3"} } }, function (err, contact){
+            collection.updateOne({"_id": new mongodb.ObjectID(req.params.id)}, { $push: { salles: updateDoc } }, function (err, contact){
                 if (err) throw err;
 
                 res.send(contact);
