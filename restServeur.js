@@ -49,7 +49,7 @@ MongoClient.connect(url, function (err, db){
                 res.send(contact);
             })
         });
-        app.get('/localpitsymf/orga/newsalle/sallesinscrite/:id', function(req, res){
+        app.get('/localpitsymf/orga/newsalle/sallesinscrite/:id', cors(corsOptionsDelegate), function(req, res){
             collection.find({"_id": new mongodb.ObjectID(req.params.id)}).toArray(function(err, sallesins){
                 if (err) throw err;
                 res.send(sallesins);
