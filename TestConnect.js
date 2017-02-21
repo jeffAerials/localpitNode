@@ -16,7 +16,7 @@ MongoClient.connect(url, function (err, db){
 		collection.findOne({prix:{$lt:11}}, function (err, livre){
 			if (!err) console.log(livre.nom)
 		})
-	})
+	});
 
     db.close();
-})
+});

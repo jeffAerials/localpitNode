@@ -1,8 +1,8 @@
-var express = require ('express')
-var app = express()
+var express = require ('express');
+var app = express();
 
 app.use('/', function (req, res, next){
     res.send('HELLO Jeff !!')
-})
+});
 
-var server = app.listen(8080)
+var server = app.listen(8080);
