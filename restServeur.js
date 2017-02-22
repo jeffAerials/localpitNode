@@ -2,6 +2,7 @@ var express = require('express');
 var mongodb = require('mongodb');
 var bodyParser = require("body-parser");
 var cors = require('cors');
+var urlfonc = require('./Connexion');
 
 var app = express();
 app.use(bodyParser.json());
@@ -9,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 var MongoClient = mongodb.MongoClient;
 
-var url = 'mongodb://localhost:27017/lopitadminprep';
+var url = urlfonc();
 MongoClient.connect(url, function (err, db){
 	if (err) throw err;
     var whitelist = ['http://localhost:8080', 'http://localpit.net:8080', 'http://localhost', 'http://localpit.net'];
