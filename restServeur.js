@@ -13,7 +13,7 @@ var MongoClient = mongodb.MongoClient;
 var url = urlfonc();
 MongoClient.connect(url, function (err, db){
 	if (err) throw err;
-    var whitelist = ['http://localhost:8080', 'http://www.localpit.net:8080', 'http://localhost', 'http://www.localpit.net', 'http://localpit.net', 'http://localpit.net:8080'];
+    var whitelist = ['http://localhost:8080', 'http://www.localpit.net:8080', 'http://localhost', 'http://www.localpit.net', 'http://localpit.net', 'http://localpit.net:8080']; // ajout http white list
     var corsOptionsDelegate = function (req, callback) {
         var corsOptions;
         if (whitelist.indexOf(req.header('Origin')) !== -1) {
