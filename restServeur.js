@@ -26,10 +26,7 @@ MongoClient.connect(url, function (err, db){
 
 	db.collection ('SearchSalles', function(err, collection){
 
-        collection.createIndex(
-            { nom : "text" }, function(err, result) {
 
-            });
 
 		app.get('/localpitsymf/orga/newsalle/searchsalles', cors(corsOptionsDelegate), function(req, res){
             var searchDoc = req.query;
@@ -40,6 +37,19 @@ MongoClient.connect(url, function (err, db){
 		});
 
 	});
+    db.collection ('SalleDocument', function(err, collection){
+
+
+
+        app.get('/localpitsymf/orga/indexsalle/searchsalledocinsc', cors(corsOptionsDelegate), function(req, res){
+            var searchDoc = req.query;
+            collection.find({$text: {"$search" : searchDoc.nom.toString() }}).toArray(function(err, salle){
+                if (err) throw err;
+                res.send(salle);
+            })
+        });
+
+    });
 	db.collection('Contacts', function(err, collection){
         app.options('/localpitsymf/orga/newsalle/ajoutsalle/:id', cors(corsOptionsDelegate));
         app.put('/localpitsymf/orga/newsalle/ajoutsalle/:id',  cors(corsOptionsDelegate), function(req, res){
