@@ -67,6 +67,17 @@ MongoClient.connect(url, function (err, db){
             })
         });
     });
+	db.collection('Product', function(err, collection){
+	    app.options('/localpitsymf/testmongo/creategeoloc/:id', cors(corsOptionsDelegate));
+	    app.put('/localpitsymf/testmongo/creategeoloc/:id', cors(corsOptionsDelegate), function(req, res){
+	        var updateDoc = req.body;
+	        console.log(updateDoc["test"]);
+	        collection.updateOne({"_id": new mongodb.ObjectID(req.params.id)}, {$set: {loc: { type: "Point", coordinates: [updateDoc["lat"], updateDoc["lon"]]}}}, function (err, product){
+	            if (err) throw err;
+	            res.send(product);
+            })
+        })
+    })
 });
 
 // modif serveur 3eme modif 457458455445545
