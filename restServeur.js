@@ -71,8 +71,10 @@ MongoClient.connect(url, function (err, db){
 	    app.options('/localpitsymf/testmongo/creategeoloc/:id', cors(corsOptionsDelegate));
 	    app.put('/localpitsymf/testmongo/creategeoloc/:id', cors(corsOptionsDelegate), function(req, res){
 	        var updateDoc = req.body;
-	        console.log(updateDoc["test"]);
-	        collection.updateOne({"_id": new mongodb.ObjectID(req.params.id)}, {$set: {loc: { type: "Point", coordinates: [updateDoc["lat"], updateDoc["lon"]]}}}, function (err, product){
+	        var latn = parseFloat(updateDoc["lat"]);
+            var lonn = parseFloat(updateDoc["lon"]);
+	        console.log(latn);
+	        collection.updateOne({"_id": new mongodb.ObjectID(req.params.id)}, {$set: {loc: { type: "Point", coordinates: [latn, lonn]}}}, function (err, product){
 	            if (err) throw err;
 	            res.send(product);
             })
