@@ -30,16 +30,42 @@ MongoClient.connect(url, function (err, db){
 
 		app.get('/localpitsymf/orga/newsalle/searchsalles', cors(corsOptionsDelegate), function(req, res){
             var searchDoc = req.query;
-			collection.find({nom: {$regex : searchDoc.nom.toString(), $options: 'i' }}).toArray(function(err, salle){
+			collection.find({society: {$regex : searchDoc.society.toString(), $options: 'i' }}).toArray(function(err, salle){
                 if (err) throw err;
                 res.send(salle);
 			})
 		});
 
 	});
+	db.collection('OrgaDocument', function(err, collection) {
+        app.get('/localpitsymf/neworga/searchorgas', cors(corsOptionsDelegate), function (req, res) {
+            var searchDoc = req.query;
+            collection.find({society: {$regex: searchDoc.society.toString(), $options: 'i'}}).toArray(function (err, orga) {
+                if (err) throw err;
+                res.send(orga);
+            })
+        });
+    });
+
+	db.collection('BandDocument', function(err, collection) {
+        app.get('/localpitsymf/newband/searchbands', cors(corsOptionsDelegate), function (req, res) {
+            var searchDoc = req.query;
+            collection.find({$and: [{society: {$regex: searchDoc.society.toString(), $options: 'i'}}, {emailsociety:{$exists:true}}]}).sort({ "item.society": -1}).toArray(function (err, band) {
+            /*collection.find({society: {$regex: searchDoc.society.toString(), $options: 'mi'}}).sort({ "item.society": 1}).toArray(function (err, band) {*/
+                if (err) throw err;
+                res.send(band);
+            })
+        });
+    });
     db.collection ('SalleDocument', function(err, collection){
 
-
+        app.get('/localpitsymf/newsalle/searchsalles', cors(corsOptionsDelegate), function(req, res){
+            var searchDoc = req.query;
+            collection.find({society: {$regex : searchDoc.society.toString(), $options: 'i' }}).toArray(function(err, salle){
+                if (err) throw err;
+                res.send(salle);
+            })
+        });
 
         app.get('/localpitsymf/orga/indexsalle/searchsalledocinsc', cors(corsOptionsDelegate), function(req, res){
             var searchDoc = req.query;
