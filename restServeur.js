@@ -32,22 +32,46 @@ MongoClient.connect(url, function (err, db){
             var searchDoc = req.query;
 			collection.find({society: {$regex : searchDoc.society.toString(), $options: 'i' }}).toArray(function(err, salle){
                 if (err) throw err;
+
                 res.send(salle);
 			})
 		});
 
 	});
 	db.collection('OrgaDocument', function(err, collection) {
+        app.options('/localpitsymf/neworga/creategeoloc/:id', cors(corsOptionsDelegate));
+        app.put('/localpitsymf/neworga/creategeoloc/:id', cors(corsOptionsDelegate), function(req, res){
+            var updateDoc = req.body;
+            var latn = parseFloat(updateDoc["lat"]);
+            var lonn = parseFloat(updateDoc["lon"]);
+            collection.updateOne({"_id": new mongodb.ObjectID(req.params.id)}, {$set: {loc: { type: "Point", coordinates: [latn, lonn]}}}, function (err, orga){
+                if (err) throw err;
+
+                res.send(orga);
+            })
+        });
         app.get('/localpitsymf/neworga/searchorgas', cors(corsOptionsDelegate), function (req, res) {
             var searchDoc = req.query;
             collection.find({society: {$regex: searchDoc.society.toString(), $options: 'i'}}).toArray(function (err, orga) {
                 if (err) throw err;
+
                 res.send(orga);
             })
         });
     });
 
 	db.collection('BandDocument', function(err, collection) {
+        app.options('/localpitsymf/newband/creategeoloc/:id', cors(corsOptionsDelegate));
+        app.put('/localpitsymf/newband/creategeoloc/:id', cors(corsOptionsDelegate), function(req, res){
+            var updateDoc = req.body;
+            var latn = parseFloat(updateDoc["lat"]);
+            var lonn = parseFloat(updateDoc["lon"]);
+            collection.updateOne({"_id": new mongodb.ObjectID(req.params.id)}, {$set: {loc: { type: "Point", coordinates: [latn, lonn]}}}, function (err, band){
+                if (err) throw err;
+
+                res.send(band);
+            })
+        });
         app.get('/localpitsymf/newband/searchbands', cors(corsOptionsDelegate), function (req, res) {
             var searchDoc = req.query;
             collection.find({$and: [{society: {$regex: searchDoc.society.toString(), $options: 'i'}}, {emailsociety:{$exists:true}}]}).sort({ "item.society": -1}).toArray(function (err, band) {
@@ -58,7 +82,17 @@ MongoClient.connect(url, function (err, db){
         });
     });
     db.collection ('SalleDocument', function(err, collection){
+        app.options('/localpitsymf/newsalle/creategeoloc/:id', cors(corsOptionsDelegate));
+        app.put('/localpitsymf/newsalle/creategeoloc/:id', cors(corsOptionsDelegate), function(req, res){
+            var updateDoc = req.body;
+            var latn = parseFloat(updateDoc["lat"]);
+            var lonn = parseFloat(updateDoc["lon"]);
+            collection.updateOne({"_id": new mongodb.ObjectID(req.params.id)}, {$set: {loc: { type: "Point", coordinates: [latn, lonn]}}}, function (err, salle){
+                if (err) throw err;
 
+                res.send(salle);
+            })
+        });
         app.get('/localpitsymf/newsalle/searchsalles', cors(corsOptionsDelegate), function(req, res){
             var searchDoc = req.query;
             collection.find({society: {$regex : searchDoc.society.toString(), $options: 'i' }}).toArray(function(err, salle){
