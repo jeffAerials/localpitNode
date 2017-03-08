@@ -50,6 +50,14 @@ MongoClient.connect(url, function (err, db){
                 res.send(orga);
             })
         });
+        app.options('/localpitsymf/confirmorga/:id', cors(corsOptionsDelegate));
+        app.put('/localpitsymf/confirmorga/:id', cors(corsOptionsDelegate), function(req, res){
+            collection.updateOne({"_id": new mongodb.ObjectID(req.params.id)}, {$set: {enable: true, confirmtoken: null}}, function (err, orga){
+                if (err) throw err;
+
+                res.send(orga);
+            })
+        });
         app.get('/localpitsymf/neworga/searchorgas', cors(corsOptionsDelegate), function (req, res) {
             var searchDoc = req.query;
             collection.find({society: {$regex: searchDoc.society.toString(), $options: 'i'}}).toArray(function (err, orga) {
@@ -72,6 +80,14 @@ MongoClient.connect(url, function (err, db){
                 res.send(band);
             })
         });
+        app.options('/localpitsymf/confirmband/:id', cors(corsOptionsDelegate));
+        app.put('/localpitsymf/confirmband/:id', cors(corsOptionsDelegate), function(req, res){
+            collection.updateOne({"_id": new mongodb.ObjectID(req.params.id)}, {$set: {enable: true, confirmtoken: null}}, function (err, band){
+                if (err) throw err;
+
+                res.send(band);
+            })
+        });
         app.get('/localpitsymf/newband/searchbands', cors(corsOptionsDelegate), function (req, res) {
             var searchDoc = req.query;
             collection.find({$and: [{society: {$regex: searchDoc.society.toString(), $options: 'i'}}, {emailsociety:{$exists:true}}]}).sort({ "item.society": -1}).toArray(function (err, band) {
@@ -88,6 +104,14 @@ MongoClient.connect(url, function (err, db){
             var latn = parseFloat(updateDoc["lat"]);
             var lonn = parseFloat(updateDoc["lon"]);
             collection.updateOne({"_id": new mongodb.ObjectID(req.params.id)}, {$set: {loc: { type: "Point", coordinates: [latn, lonn]}}}, function (err, salle){
+                if (err) throw err;
+
+                res.send(salle);
+            })
+        });
+        app.options('/localpitsymf/confirmsalle/:id', cors(corsOptionsDelegate));
+        app.put('/localpitsymf/confirmsalle/:id', cors(corsOptionsDelegate), function(req, res){
+            collection.updateOne({"_id": new mongodb.ObjectID(req.params.id)}, {$set: {enable: true, confirmtoken: null}}, function (err, salle){
                 if (err) throw err;
 
                 res.send(salle);
