@@ -144,6 +144,16 @@ MongoClient.connect(url, function (err, db){
                 res.send(contact);
             })
         });
+        app.options('/localpitsymf/newcontact/deletecontact/:ids', cors(corsOptionsDelegate));
+        app.delete('/localpitsymf/newcontact/deletecontact/:ids', cors(corsOptionsDelegate), function(req, res){
+            console.log('Deleting wine: ' + req.params.ids);
+            ids = parseInt(req.params.ids);
+            collection.remove({ids: ids}, function (err, orga){
+                if (err) throw err;
+
+                res.send(orga);
+            })
+        });
         app.get('/localpitsymf/orga/newsalle/sallesinscrite/:id', cors(corsOptionsDelegate), function(req, res){
             collection.find({"_id": new mongodb.ObjectID(req.params.id)}).toArray(function(err, sallesins){
                 if (err) throw err;
